@@ -22,7 +22,7 @@ class TicTacToe:
     # iterate over the board with index and value
     for id, space in enumerate(self.board):
       # print each row and ending depending on the index
-      # over complicated for the sake of one license
+      # over complicated because I wanted to make it one line
       # ternary operator "(true result) if (condition) else (false result)"
       print(space, end="\n" if id == 8 else "\n-+-+-\n" if id % 3 == 2 else "|")
 
