@@ -79,8 +79,7 @@ class Minesweeper:
         coords = input(f"Enter coordinates ({self.rows} {self.columns}): ")
         coords = coords.split(" ")
         if coords[0].lower() == "f":
-          coords.pop(0) # remove the f from the list
-          x, y = list(map(lambda c: int(c) - 1, coords))
+          x, y = list(map(lambda c: int(c) - 1, coords[1:))
           self.flagSpace(x, y)
         else:
           x, y = list(map(lambda c: int(c) - 1, coords))
