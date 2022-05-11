@@ -2,41 +2,28 @@ import random
 
 class Minesweeper:
   def setDifficulty(self, difficulty):
-    if difficulty == 0:
-      self.rows = 3
-      self.columns = 3
-      self.mines = 2
     if difficulty == 1:
-      self.rows = 9
-      self.columns = 9
-      self.mines = 10
+      self.rows, self.columns, self.mines = 9, 9, 10
     elif difficulty == 2:
-      self.rows = 16
-      self.columns = 16
-      self.mines = 40
+      self.rows, self.columns, self.mines = 16, 16, 40
     elif difficulty == 3:
-      self.rows = 16
-      self.columns = 30
-      self.mines = 99
+      self.rows, self.columns, self.mines = 16, 30, 99
       
   def generateBoard(self):
     self.mineBoard = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
     for i in range(self.mines):
       x, y = self.createBomb()
-      print("C", x, y)
       for sx, sy in self.getValidSpaces(x, y):
-        print("B", sx, sy)
         if self.mineBoard[sy][sx] != "X":
           self.mineBoard[sy][sx] += 1
 
   def createBomb(self):
-    x = random.randint(0, self.columns - 1)
-    y = random.randint(0, self.rows - 1)
-    if (self.mineBoard[y][x] != "X"):
-      self.mineBoard[y][x] = "X"
-      return x, y
-    else:
-      return self.createBomb()
+    while True:
+      x = random.randint(0, self.columns - 1)
+      y = random.randint(0, self.rows - 1)
+      if (self.mineBoard[y][x] != "X"):
+        self.mineBoard[y][x] = "X"
+        return x, y
 
   def generatePlayerBoard(self):
     self.playerBoard = [["-" for _ in range(self.columns)] for _ in range(self.rows)]
@@ -71,6 +58,7 @@ class Minesweeper:
       self.playerBoard[y][x] = "-"
 
   def checkWin(self):
+    # Somehow combine these sums?
     empty = sum(x.count("-") for x in self.playerBoard)
     flagged = sum(x.count("F") for x in self.playerBoard)
     return empty + flagged == self.mines
@@ -87,14 +75,12 @@ class Minesweeper:
           self.flagSpace(x, y)
         else:
           x, y = list(map(lambda c: int(c) - 1, coords))
-          if x < 0 or y < 0:
+          if x < 0 or y < 0 or self.playerBoard[y][x] != "-":
             continue
           if (self.mineBoard[y][x] == "X"):
             print("Game Over!")
             self.running = False
             self.playerBoard = self.mineBoard
-          elif (self.playerBoard[y][x] != "-"):
-            continue
           else:
             self.checkSpace(x, y)
         self.displayBoard(self.playerBoard)
@@ -103,11 +89,10 @@ class Minesweeper:
         pass
 
   def start(self):
-    while True:
+    difficulty = 0
+    while difficulty < 1 or difficulty > 3:
       try:
         difficulty = int(input("Difficulty (1,2,3): "))
-        if 0 < difficulty < 4:
-          break
       except:
         pass
         
